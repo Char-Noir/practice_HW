@@ -1,9 +1,5 @@
 ﻿using HW2.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HW2.Features
 {
@@ -17,8 +13,8 @@ namespace HW2.Features
             if (isDefaultInput)
             {
                 int lenghtOfString = ConsoleHelper.ReadIntFromConsole(PredicateHelper.CheckForNumberInRange(1024,0), "Integer beetween 0 and 1024 inclusivly.");
-                StringBuilder stringBuilder = new StringBuilder();
-                Random random = new Random();
+                StringBuilder stringBuilder = new();
+                Random random = new();
                 for (int i = 0; i < lenghtOfString; i++)
                 {
                     if (random.NextDouble() <= SYMBOL_IS_DIGIT_CHANCE)
@@ -46,31 +42,10 @@ namespace HW2.Features
                     Console.WriteLine("Try again!");
                 }
             }
-            int sum = 0;
-            bool[] digits = new bool[10];
-            for (int i = 0; i < value.Length; i++)
-            {
-                char symbol = value[i];
-                if (char.IsDigit(symbol))
-                {
-                    int digit = symbol - '0';
-                    sum+= digit;
-                    digits[digit] = true;
-                }
-            }
-            if(sum == 0)
+            FeatureHelper.NumbersFromText(value, out int? sum, out int? maxDigit);
+            if(sum == null ||  maxDigit == null)
             {
                 Console.WriteLine("There are no digits in the string.");
-                return;
-            }
-            int maxDigit = -1;
-            for(int i = 9; i >= 0; i--)
-            {
-                if (digits[i])
-                {
-                    maxDigit = i;
-                    break;
-                }
             }
             Console.WriteLine($"Sum of digits in the string is {sum}");
             Console.WriteLine($"Maximum digit in the string is {maxDigit}");
