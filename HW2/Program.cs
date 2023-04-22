@@ -15,7 +15,7 @@ namespace HW2
 
             List<BaseFeature> features = new List<BaseFeature>
             {
-                
+                new NumbersInTextFeature()
             };
             ConsoleHelper.HandleMenu(features);
         }
