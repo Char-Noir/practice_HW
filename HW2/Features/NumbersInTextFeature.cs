@@ -12,7 +12,7 @@ namespace HW2.Features
             string value = string.Empty;
             if (isDefaultInput)
             {
-                int lenghtOfString = ConsoleHelper.ReadIntFromConsole(PredicateHelper.CheckForNumberInRange(1024,0), "Integer beetween 0 and 1024 inclusivly.");
+                int lenghtOfString = ConsoleHelper.ReadIntFromConsole(PredicateHelper.CheckForNumberInRange(1024,1), "Integer beetween 1 and 1024 inclusivly.");
                 StringBuilder stringBuilder = new();
                 Random random = new();
                 for (int i = 0; i < lenghtOfString; i++)
@@ -46,6 +46,7 @@ namespace HW2.Features
             if(sum == null ||  maxDigit == null)
             {
                 Console.WriteLine("There are no digits in the string.");
+                return;
             }
             Console.WriteLine($"Sum of digits in the string is {sum}");
             Console.WriteLine($"Maximum digit in the string is {maxDigit}");
