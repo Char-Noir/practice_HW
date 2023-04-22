@@ -33,6 +33,18 @@
             }
         }
 
-        
+        public static void GetDigitIndex(string text, out int? index) {
+            text = text.TrimStart();
+            index = null;
+            for (int i = 9; i>= 0; i--)
+            {
+                int ind = text.IndexOf(i.ToString());
+                if(ind != -1)
+                {
+                    index = ind+1;
+                    break;
+                }
+            }
+        }
     }
 }
