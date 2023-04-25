@@ -2,7 +2,7 @@
 {
     internal static class FeatureHelper
     {
-        public static void NumbersFromText(string text, out int? sum, out int? maxDigit)
+        public static void NumbersFromText(string text, out int sum, out int maxDigit)
         {
             sum = 0;
             bool[] digits = new bool[10];
@@ -16,10 +16,9 @@
                     digits[digit] = true;
                 }
             }
-            maxDigit = null;
+            maxDigit = -1;
             if (sum == 0)
             {
-                sum = null;
                 return;
                 
             }
@@ -33,9 +32,9 @@
             }
         }
 
-        public static void GetDigitIndex(string text, out int? index) {
+        public static void GetDigitIndex(string text, out int index) {
             text = text.TrimStart();
-            index = null;
+            index = -1;
             for (int i = 9; i>= 0; i--)
             {
                 int ind = text.IndexOf(i.ToString());
@@ -46,5 +45,18 @@
                 }
             }
         }
+
+        public static void GetMaxValue(int[] books, out int max)
+        {
+            max = books.Max();
+            if(max<0)
+            {
+                max = 0;
+            }
+        }
+
+        
+        
+
     }
 }

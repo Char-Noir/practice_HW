@@ -16,7 +16,8 @@ namespace HW2
             List<BaseFeature> features = new List<BaseFeature>
             {
                 new NumbersInTextFeature(),
-                new GetDigitIndexWithSpacesFeature()
+                new GetDigitIndexWithSpacesFeature(),
+                new GetThickBook()
             };
             ConsoleHelper.HandleMenu(features);
         }
