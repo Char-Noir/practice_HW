@@ -17,7 +17,7 @@ namespace HW2
             {
                 new NumbersInTextFeature(),
                 new GetDigitIndexWithSpacesFeature(),
-                new GetThickBook(),
+                new GetThickBookFeature(),
                 new GetFastCarsFeature()
             };
             ConsoleHelper.HandleMenu(features);

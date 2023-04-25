@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace HW2.Features
 {
-    internal class GetThickBook : BaseFeature
+    internal class GetThickBookFeature : BaseFeature
     {
         private const int MAX_BOOK_PAGES_LENGHT = 1024;
         public override void Run(bool isDefaultInput = false)
@@ -44,7 +44,7 @@ namespace HW2.Features
             }
             Console.WriteLine($"Max books pages amount is {max}");
         }
-        public GetThickBook()
+        public GetThickBookFeature()
         {
             Name = "Get the pages of the thickest book";
             Description = "Among the pile of books, it finds the thickest one and returns the number of its pages.";
