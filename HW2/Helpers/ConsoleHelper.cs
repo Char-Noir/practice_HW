@@ -10,7 +10,7 @@ namespace HW2.Helpers
 {
     internal static class ConsoleHelper
     {
-        public const int LineLenght = 30;
+        public const int LineLenght = 45;
         public const char ContentSeparator = '#';
         public static void HandleMenu(List<BaseFeature> features)
         {
@@ -79,7 +79,7 @@ namespace HW2.Helpers
             bool correctInput = false;
             while(!correctInput)
             {
-                string input = Console.ReadLine().Replace('.', ','); ;
+                string input = Console.ReadLine().Replace('.', ',');
                 
                 bool isCorrect = double.TryParse(input, out value);
                 correctInput = isCorrect && predicate(value);
