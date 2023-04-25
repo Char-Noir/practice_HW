@@ -43,8 +43,8 @@ namespace HW2.Features
                     Console.WriteLine("Try again!");
                 }
             }
-            FeatureHelper.GetDigitIndex(value, out int? digitIndex);
-            if(digitIndex == null)
+            FeatureHelper.GetDigitIndex(value, out int digitIndex);
+            if(digitIndex == -1)
             {
                 Console.WriteLine("There are no digits in the string.");
                 return;
