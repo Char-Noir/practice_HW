@@ -55,7 +55,12 @@
             }
         }
 
-        
+        public static void GetFastCarsIndex(int[] cars, out int startIndex, out int endIndex)
+        {
+            GetMaxValue(cars, out int max);
+            startIndex = Array.IndexOf(cars, max)+1;
+            endIndex = Array.LastIndexOf(cars, max)+1;
+        }
         
 
     }
