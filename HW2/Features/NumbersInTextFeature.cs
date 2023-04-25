@@ -42,8 +42,8 @@ namespace HW2.Features
                     Console.WriteLine("Try again!");
                 }
             }
-            FeatureHelper.NumbersFromText(value, out int? sum, out int? maxDigit);
-            if(sum == null ||  maxDigit == null)
+            FeatureHelper.NumbersFromText(value, out int sum, out int maxDigit);
+            if(sum == 0)
             {
                 Console.WriteLine("There are no digits in the string.");
                 return;
