@@ -32,13 +32,15 @@ public partial class Hw4BuriakContext : DbContext
             entity.HasIndex(e => e.RoleName, "role_name_unique").IsUnique();
 
             entity.Property(e => e.RoleId)
-                .ValueGeneratedNever()
+                .UseIdentityColumn()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("role_id");
             entity.Property(e => e.RoleName)
                 .HasMaxLength(20)
                 .IsFixedLength()
                 .HasColumnName("role_name");
         });
+        modelBuilder.Entity<Role>().HasData(new Role() { RoleId = 1, RoleName="Developer" });
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -49,7 +51,8 @@ public partial class Hw4BuriakContext : DbContext
             entity.HasIndex(e => e.UserEmail, "user_email_unique").IsUnique();
 
             entity.Property(e => e.UserId)
-                .ValueGeneratedNever()
+                .UseIdentityColumn()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("user_id");
             entity.Property(e => e.UserEmail)
                 .HasMaxLength(255)
