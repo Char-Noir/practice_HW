@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HW4.DTO;
 using HW4.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HW4.Services;
 
-public class UserService
+public class UserService: IUserService
 {
     private readonly Hw4BuriakContext _context;
 
@@ -13,7 +14,7 @@ public class UserService
         _context = context;
     }
 
-    public async Task<UserResponseDto> AddUser(UserRequestDto user)
+    public async Task<UserResponseDto> AddUserAsync(UserRequestDto user)
     {
         var newUser = new User(){UserName = user.UserName, UserEmail = user.UserEmail};
         if (!ValidateEmail(newUser))
@@ -33,9 +34,20 @@ public class UserService
 
         try
         {
-            await _context.Users.AddAsync(newUser);
 
-            return new UserResponseDto(newUser.UserId, user.UserName, user.UserEmail, true, string.Empty);
+            var role = await _context.Roles.Where(x => x.RoleName == "Developer").FirstOrDefaultAsync();
+            if (role != null)
+            {
+                newUser.UserRole = role.RoleId;
+            }
+            else
+            {
+                return new UserResponseDto(null, user.UserName, user.UserEmail, true, "Something went wrong. Please contact the administrator.");
+            }
+            await _context.Users.AddAsync(newUser);
+            _context.SaveChanges();
+
+            return new UserResponseDto(newUser.UserId, newUser.UserName, newUser.UserEmail, true, string.Empty);
         }
         catch
         {
@@ -51,5 +63,21 @@ public class UserService
         var isValid = Validator.TryValidateProperty(user.UserEmail, new ValidationContext(user, null, null) { MemberName = "UserEmail" }, validationResults);
 
         return isValid;
+    }
+
+    public async Task<UserResponseDto> GetUserAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return new UserResponseDto(null, string.Empty, string.Empty, false,"Invalid Id"); 
+        }
+
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            return new UserResponseDto(null, string.Empty, string.Empty, false,"User not found!"); 
+        }
+        return new UserResponseDto(user.UserId, user.UserName, user.UserEmail, true, string.Empty);
     }
 }
