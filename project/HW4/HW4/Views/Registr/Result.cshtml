@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Greetings";
+}
+
+<div class="text-center">
+    @if (ViewBag.Error == null)
+    {
+        <strong>I'm @ViewBag.User.UserName (@ViewBag.User.UserEmail) became an ASP.NET developer!</strong>
+    }
+   
+</div>

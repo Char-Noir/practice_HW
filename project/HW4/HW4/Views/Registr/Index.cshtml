@@ -1,0 +1,21 @@
+﻿@using HW4.DTO;
+@{
+    ViewData["Title"] = "Registration";
+}
+@model UserRequestDto
+<div class="text-center">
+    
+    <form asp-action="Index" method="POST">
+        <div class="form-group">
+            <label  >Name</label>
+            <input type="text" required="required" minlength="3" maxlength="60" class="form-control" placeholder="Name" asp-for="UserName">
+        </div>
+        <div class="form-group">
+            <label asp-for="UserEmail">Email address</label>
+            <input type="email" class="form-control" asp-for="UserEmail" maxlength="255" required="required" aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Became a developer!</button>
+    </form>
+</div>
