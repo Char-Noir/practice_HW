@@ -1,0 +1,51 @@
+﻿@model HW5.DTO.Requests.OrderRequestDto
+@using System.Web
+@{
+    ViewData["Title"] = "Edit";
+    var id = Context.Request.Query["id"];
+
+}
+
+<h1>Edit</h1>
+
+<h4>Order</h4>
+<hr />
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" asp-controller="Order" method="post" asp-route-id="@id">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group" >
+                    <label asp-for="OrderDateTime" class="control-label"></label>
+                    @if (Model.OrderDateTime <= DateTime.Now)
+                    {
+                        <input readonly asp-for="OrderDateTime" class="form-control" />
+                    }
+                    else{
+                    <input asp-for="OrderDateTime" class="form-control" min="@(DateTime.Now.ToString("yyyy-MM-dd"))"
+                    max="@(DateTime.Now.AddYears(1).ToString("yyyy-MM-dd"))" />
+                        
+                        }
+                        
+                    <span asp-validation-for="OrderDateTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AnalysisId" class="control-label"></label>
+                    <select asp-for="AnalysisId" asp-items="@(ViewBag.Analysis)" class="form-control"></select>
+                    <span asp-validation-for="AnalysisId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
