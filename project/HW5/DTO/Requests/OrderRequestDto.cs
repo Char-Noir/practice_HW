@@ -1,8 +1,11 @@
-﻿namespace HW5.DTO.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HW5.DTO.Requests
 {
     public class OrderRequestDto
     {
-        public DateTime DateTime { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime OrderDateTime { get; set; }
         public int AnalysisId { get; set; }
     }
 }

@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public DateTime DateTime { get; set; }
-        public AnalysisResponseDto Analysis { get; set; }
+        public AnalysisFullResponseDto Analysis { get; set; }
     }
 }

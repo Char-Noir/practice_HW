@@ -1,6 +1,6 @@
 ﻿namespace HW5.DTO.Responses
 {
-    public class AnalysisResponseDto
+    public class AnalysisFullResponseDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
