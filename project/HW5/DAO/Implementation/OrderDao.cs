@@ -24,10 +24,29 @@ namespace HW5.DAO.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<DtoResult<OrderShortResponseDto>> CreateOrderAsync(OrderRequestDto order)
+        public async Task<DtoResult<int>> CreateOrderAsync(OrderRequestDto order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string sql = "INSERT INTO Orders (ord_datetime, ord_an) VALUES (@datetime, @analysisId); SELECT SCOPE_IDENTITY();";
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@datetime", order.OrderDateTime);
+                        command.Parameters.AddWithValue("@analysisId", order.AnalysisId);
+                        int orderId = Convert.ToInt32(await command.ExecuteScalarAsync());
+                        return DtoResult<int>.Success(orderId);
+                    }
+                }
+            }
+            catch
+            {
+                return DtoResult<int>.Error($"Failed to create order.");
+            }
         }
+
 
         public Task<DtoResult<bool>> DeleteOrderAsync(int orderId)
         {

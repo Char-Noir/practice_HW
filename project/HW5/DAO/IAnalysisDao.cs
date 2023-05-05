@@ -1,7 +1,12 @@
-﻿namespace HW5.DAO
+﻿using HW5.DTO.Responses;
+using HW5.DTO;
+
+namespace HW5.DAO
 {
     public interface IAnalysisDao
     {
-        Task<bool> CheckAnalysisAsync(int orderId);
+        Task<DtoResult<bool>> CheckAnalysisAsync(int orderId);
+        // Read
+        Task<DtoResult<IEnumerable<AnalysisShortResponseDto>>> GetAnalysissAsync();
     }
 }

@@ -7,7 +7,7 @@ namespace HW5.DAO
     public interface IOrderDao
     {
         // Create
-        Task<DtoResult<OrderShortResponseDto>> CreateOrderAsync(OrderRequestDto order);
+        Task<DtoResult<int>> CreateOrderAsync(OrderRequestDto order);
 
         // Read
         Task<DtoResult<OrderFullResponseDto>> GetOrderAsync(int orderId);
