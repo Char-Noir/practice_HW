@@ -1,0 +1,45 @@
+﻿@using HW5.DTO.Responses;
+@model HW5.DTO.Requests.OrderRequestDto
+
+@{
+    ViewData["Title"] = "Create";
+    if(ViewBag.Analysis == null)
+    {
+        ViewBag.Analysis = new SelectList(new List<AnalysisShortResponseDto>(new AnalysisShortResponseDto[] { new AnalysisShortResponseDto { Id = -1, Name = "" } }), "Id", "Name");
+    }
+}
+
+<h1>Create</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" asp-controller="Order" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="OrderDateTime" class="control-label"></label>
+                <input asp-for="OrderDateTime" class="form-control" min="@(DateTime.Now.ToString("yyyy-MM-dd"))"
+                       max="@(DateTime.Now.AddYears(1).ToString("yyyy-MM-dd"))" value="@(DateTime.Now.ToString("yyyy-MM-ddTHH:mm"))"/>
+                <span asp-validation-for="OrderDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnalysisId" class="control-label"></label>
+                <select asp-for="AnalysisId" asp-items="@(ViewBag.Analysis)" class="form-control"></select>
+                <span asp-validation-for="AnalysisId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

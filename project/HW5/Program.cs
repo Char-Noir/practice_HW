@@ -10,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IOrderDao, OrderDao>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IAnalysisDao, AnalysisDao>();
+builder.Services.AddTransient<IAnalysisService, AnalysisService>();
 
 var app = builder.Build();
 
@@ -30,6 +31,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Order}/{action=Index}");
 
 app.Run();
