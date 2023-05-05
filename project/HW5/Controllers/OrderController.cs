@@ -39,9 +39,14 @@ namespace HW5.Controllers
         }
 
         // GET: OrderController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var order = await _orderService.GetOrderAsync(id);
+            if (!order.IsSuccessed)
+            {
+                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(order.Messages);
+            }
+            return View(order.Data);
         }
 
         // GET: OrderController/Create
@@ -96,44 +101,90 @@ namespace HW5.Controllers
         }
 
         // GET: OrderController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var order = await _orderService.GetOrderAsync(id);
+            if (!order.IsSuccessed)
+            {
+                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(order.Messages);
+                return View();
+            }
+            var analysis = await _analysisService.GetAnalysisAsync();
+            if (!analysis.IsSuccessed)
+            {
+                analysis.Data = new List<AnalysisShortResponseDto>();
+                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(analysis.Messages);
+            }
+            ViewBag.Analysis = new SelectList(analysis.Data ?? new List<AnalysisShortResponseDto>(new AnalysisShortResponseDto[] { new AnalysisShortResponseDto { Id = -1, Name = "" } }), "Id", "Name", new AnalysisShortResponseDto { Id = order.Data.Analysis.Id, Name = order.Data.Analysis.Name});
+            return View(new OrderRequestDto { AnalysisId = order.Data?.Analysis.Id ?? -1, OrderDateTime = order.Data?.DateTime ?? DateTime.MinValue});
+
         }
 
         // POST: OrderController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, OrderRequestDto order)
         {
+            var analysis = await _analysisService.GetAnalysisAsync();
+            if (!analysis.IsSuccessed)
+            {
+                analysis.Data = new List<AnalysisShortResponseDto>();
+                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(analysis.Messages);
+            }
+            ViewBag.Analysis = new SelectList(analysis.Data ?? new List<AnalysisShortResponseDto>(new AnalysisShortResponseDto[] { new AnalysisShortResponseDto { Id = -1, Name = "" } }), "Id", "Name");
+            if (order.AnalysisId <= 0)
+            {
+                ViewBag.ErrorMessage = "Invalid analysis.";
+                return View(order);
+            }
+            var result = await _orderService.UpdateOrderAsync(id,order);
+            if (!result.IsSuccessed)
+            {
+                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(result.Messages);
+                return View(order);
+            }
             try
             {
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(order);
             }
         }
 
         // GET: OrderController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var result = await _orderService.GetOrderAsync(id);
+            if (!result.IsSuccessed)
+            {
+                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(result.Messages);
+                return View();
+            }
+            return View(result.Data);
         }
 
         // POST: OrderController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
+            var result = await _orderService.DeleteOrderAsync(id);
+            if (!result.IsSuccessed)
+            {
+                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(result.Messages);
+                var order = await _orderService.GetOrderAsync(id);
+                return View(order.Data);
+            }
             try
             {
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                var order = await _orderService.GetOrderAsync(id);
+                return View(order.Data);
             }
         }
     }

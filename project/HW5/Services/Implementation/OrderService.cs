@@ -62,9 +62,18 @@ namespace HW5.Services.Implementation
 
         public async Task<DtoResult<bool>> UpdateOrderAsync(int id, OrderRequestDto order)
         {
-            var result = await _orderDao.CheckOrderAsync(id);
-            if (result.IsSuccessed && result.Data)
+            var result = await _orderDao.GetOrderAsync(id);
+            if (result.IsSuccessed)
             {
+                if(result.Data.DateTime > DateTime.Now && (order.OrderDateTime<= DateTime.Now ||order.OrderDateTime>= DateTime.Now.AddYears(1)))
+                {
+                    return DtoResult<bool>.Error("You need to chose future.");
+                }
+                 if (result.Data.DateTime <= DateTime.Now && result.Data.DateTime.ToString("yyyy-mm-dd hh-mm") !=( order.OrderDateTime.ToString("yyyy-mm-dd hh-mm")))
+                {
+                    return DtoResult<bool>.Error("You can not change old orders dates");
+                }
+                
                 return await _orderDao.UpdateOrderAsync(id, order);
             }
             return DtoResult<bool>.Error("There is no such order.");

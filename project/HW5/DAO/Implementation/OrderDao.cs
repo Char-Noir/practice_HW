@@ -19,10 +19,29 @@ namespace HW5.DAO.Implementation
             }
         }
 
-        public Task<DtoResult<bool>> CheckOrderAsync(int orderId)
+        public async Task<DtoResult<bool>> CheckOrderAsync(int orderId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string sql = "SELECT COUNT(*) FROM Orders WHERE ord_id = @orderId;";
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@orderId", orderId);
+                        int count = Convert.ToInt32(await command.ExecuteScalarAsync());
+                        bool result = count > 0;
+                        return DtoResult<bool>.Success(result);
+                    }
+                }
+            }
+            catch
+            {
+                return DtoResult<bool>.Error($"Order not found: {orderId}.");
+            }
         }
+
 
         public async Task<DtoResult<int>> CreateOrderAsync(OrderRequestDto order)
         {
@@ -48,15 +67,105 @@ namespace HW5.DAO.Implementation
         }
 
 
-        public Task<DtoResult<bool>> DeleteOrderAsync(int orderId)
+        public async Task<DtoResult<bool>> DeleteOrderAsync(int orderId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    string sql = "DELETE FROM Orders WHERE ord_id = @orderId";
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@orderId", orderId);
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+                        if (rowsAffected > 0)
+                        {
+                            return DtoResult<bool>.Success(true);
+                        }
+                        else
+                        {
+                            return DtoResult<bool>.Error($"Failed to delete order with id {orderId}. Order not found.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return DtoResult<bool>.Error($"Failed to delete order with id {orderId}. Error message: {ex.Message}");
+            }
         }
 
-        public Task<DtoResult<OrderFullResponseDto>> GetOrderAsync(int orderId)
+
+        public async Task<DtoResult<OrderFullResponseDto>> GetOrderAsync(int orderId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string sql = @"
+                SELECT
+                    o.ord_id AS OrderId,
+                    o.ord_datetime AS OrderDateTime,
+                    a.an_id AS AnalysisId,
+                    a.an_name AS AnalysisName,
+                    a.an_cost AS AnalysisCost,
+                    a.an_price AS AnalysisPrice,
+                    g.gr_id AS GroupId,
+                    g.gr_name AS GroupName,
+                    g.gr_temp AS GroupTemp
+                FROM Orders o
+                INNER JOIN Analysis a ON o.ord_an = a.an_id
+                INNER JOIN Groups g ON a.an_group = g.gr_id
+                WHERE o.ord_id = @orderId;
+            ";
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@orderId", orderId);
+
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                OrderFullResponseDto order = new OrderFullResponseDto
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("OrderId")),
+                                    DateTime = reader.GetDateTime(reader.GetOrdinal("OrderDateTime")),
+                                    Analysis = new AnalysisFullResponseDto
+                                    {
+                                        Id = reader.GetInt32(reader.GetOrdinal("AnalysisId")),
+                                        Name = reader.GetString(reader.GetOrdinal("AnalysisName")),
+                                        Cost = reader.GetDecimal(reader.GetOrdinal("AnalysisCost")),
+                                        Price = reader.GetDecimal(reader.GetOrdinal("AnalysisPrice")),
+                                        GroupId = reader.GetInt32(reader.GetOrdinal("GroupId")),
+                                        Group = new GroupResponseDto
+                                        {
+                                            Id = reader.GetInt32(reader.GetOrdinal("GroupId")),
+                                            Name = reader.GetString(reader.GetOrdinal("GroupName")),
+                                            Temp = reader.GetString(reader.GetOrdinal("GroupTemp"))
+                                        }
+                                    }
+                                };
+
+                                return DtoResult<OrderFullResponseDto>.Success(order);
+                            }
+                            else
+                            {
+                                return DtoResult<OrderFullResponseDto>.Error($"Order with id {orderId} not found.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return DtoResult<OrderFullResponseDto>.Error($"Failed to get order. {ex.Message}");
+            }
         }
+
 
         public async Task<DtoResult<IEnumerable<OrderShortResponseDto>>> GetOrdersAsync(bool sqlDataReaderMode)
         {
@@ -126,9 +235,33 @@ namespace HW5.DAO.Implementation
 
         }
 
-        public Task<DtoResult<bool>> UpdateOrderAsync(int id, OrderRequestDto order)
+        public async Task<DtoResult<bool>> UpdateOrderAsync(int id, OrderRequestDto order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    string query = "UPDATE Orders SET ord_datetime = @datetime, ord_an = @analysis WHERE ord_id = @id";
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@datetime", order.OrderDateTime);
+                        command.Parameters.AddWithValue("@analysis", order.AnalysisId);
+                        command.Parameters.AddWithValue("@id", id);
+
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                        return  DtoResult<bool>.Success(rowsAffected > 0);
+                    }
+                }
+            }
+            catch
+            {
+                return DtoResult<bool>.Error("Something went wrong.");
+            }
         }
+
     }
 }
