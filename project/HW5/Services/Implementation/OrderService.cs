@@ -18,16 +18,20 @@ namespace HW5.Services.Implementation
             _analysisDao = analysisDao;
         }
 
-        public async Task<DtoResult<OrderShortResponseDto>> CreateOrderAsync(OrderRequestDto order)
+        public async Task<DtoResult<int>> CreateOrderAsync(OrderRequestDto order)
         {
-            order.DateTime = DateTime.Now;
-            if (await _analysisDao.CheckAnalysisAsync(order.AnalysisId))
+            if (order.OrderDateTime >= DateTime.Now.AddDays(365))
+            {
+                return DtoResult<int>.Error("Ordering too far in advance. You cannot create it that far in advance.");
+            }
+            var result = await _analysisDao.CheckAnalysisAsync(order.AnalysisId);
+            if (result.IsSuccessed && result.Data)
             {
                 return await _orderDao.CreateOrderAsync(order);
             }
             else
             {
-                 return DtoResult<OrderShortResponseDto>.Error("There is no such analysis.");
+                 return DtoResult<int>.Error("There is no such analysis.");
             }
         }
 

@@ -8,7 +8,7 @@ namespace HW5.Services
     public interface IOrderService
     {
             // Create
-            Task<DtoResult<OrderShortResponseDto>> CreateOrderAsync(OrderRequestDto order);
+            Task<DtoResult<int>> CreateOrderAsync(OrderRequestDto order);
 
             // Read
             Task<DtoResult<OrderFullResponseDto>> GetOrderAsync(int orderId);
