@@ -1,9 +1,15 @@
-﻿namespace HW5.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace HW5.Models;
+
+public partial class Group
 {
-    public class Group
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Temp { get; set; }
-    }
+    public int GrId { get; set; }
+
+    public string GrName { get; set; } = null!;
+
+    public string GrTemp { get; set; } = null!;
+
+    public virtual ICollection<Analysis> Analyses { get; set; } = new List<Analysis>();
 }
