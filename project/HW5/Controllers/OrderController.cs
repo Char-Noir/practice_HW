@@ -13,32 +13,55 @@ namespace HW5.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IAnalysisService _analysisService;
+        private readonly string _dbMethode;
 
-        public OrderController(IOrderService orderService, IAnalysisService analysisService)
+        public OrderController(IOrderService orderService, IAnalysisService analysisService, IConfiguration configuration)
         {
             _orderService = orderService;
             _analysisService = analysisService;
+            _dbMethode = (configuration["PrefferedDataBaseConnectionMethode"] ?? "EF").ToUpper().Trim();
         }
 
         // GET: OrderController
         public async Task<ActionResult> Index()
         {
-            var orders1 = await _orderService.GetOrdersAsync(true);
-            if (!orders1.IsSuccessed)
+            ViewBag.Methode = _dbMethode;
+            switch (_dbMethode)
             {
-                orders1.Data = new List<OrderShortResponseDto>();
-                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(orders1.Messages);
+                case "EF":
+                    {
+                        
+                        var orders = await _orderService.GetOrdersAsync(new Dictionary<string, string>());
+                        if (!orders.IsSuccessed)
+                        {
+                            orders.Data = new List<OrderShortResponseDto>();
+                            ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(orders.Messages);
+                        }
+                        return View((orders.Data, orders.Data));
+                    }
+                case "ADO":
+                    {
+                        var orders1 = await _orderService.GetOrdersAsync(new Dictionary<string, string> { { "sqlDataAccesser","reader" } });
+                        if (!orders1.IsSuccessed)
+                        {
+                            orders1.Data = new List<OrderShortResponseDto>();
+                            ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(orders1.Messages);
+                        }
+                        var orders2 = await _orderService.GetOrdersAsync(new Dictionary<string, string> { { "sqlDataAccesser", "adapter" } });
+                        if (!orders2.IsSuccessed)
+                        {
+                            orders2.Data = new List<OrderShortResponseDto>();
+                            ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(orders2.Messages);
+                        }
+                        return View((orders1.Data, orders2.Data));
+                    }
+                default:
+                    throw new Exception("Invalid preferred database connection method");
             }
-            var orders2 = await _orderService.GetOrdersAsync(false);
-            if (!orders2.IsSuccessed)
-            {
-                orders2.Data = new List<OrderShortResponseDto>();
-                ViewBag.ErrorMessage = ErrorHelper.JoinListWithNewLine(orders2.Messages);
-            }
-            return View((orders1.Data, orders2.Data));
+            
         }
 
-        // GET: OrderController/Details/5
+        // GET: OrderController/Details/id
         public async Task<ActionResult> Details(int id)
         {
             var order = await _orderService.GetOrderAsync(id);
@@ -100,7 +123,7 @@ namespace HW5.Controllers
             }
         }
 
-        // GET: OrderController/Edit/5
+        // GET: OrderController/Edit/id
         public async Task<ActionResult> Edit(int id)
         {
             var order = await _orderService.GetOrderAsync(id);
@@ -120,7 +143,7 @@ namespace HW5.Controllers
 
         }
 
-        // POST: OrderController/Edit/5
+        // POST: OrderController/Edit/id
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, OrderRequestDto order)
@@ -153,7 +176,7 @@ namespace HW5.Controllers
             }
         }
 
-        // GET: OrderController/Delete/5
+        // GET: OrderController/Delete/id
         public async Task<ActionResult> Delete(int id)
         {
             var result = await _orderService.GetOrderAsync(id);
@@ -165,7 +188,7 @@ namespace HW5.Controllers
             return View(result.Data);
         }
 
-        // POST: OrderController/Delete/5
+        // POST: OrderController/Delete/id
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
