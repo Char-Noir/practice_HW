@@ -55,9 +55,9 @@ namespace HW5.Services.Implementation
             return DtoResult<OrderFullResponseDto>.Error("There is no such order.");
         }
 
-        public async Task<DtoResult<IEnumerable<OrderShortResponseDto>>> GetOrdersAsync(bool sqlDataReaderMode)
+        public async Task<DtoResult<IEnumerable<OrderShortResponseDto>>> GetOrdersAsync(Dictionary<string, string> parametrs)
         {
-            return await _orderDao.GetOrdersAsync(sqlDataReaderMode);
+            return await _orderDao.GetOrdersAsync(parametrs);
         }
 
         public async Task<DtoResult<bool>> UpdateOrderAsync(int id, OrderRequestDto order)
