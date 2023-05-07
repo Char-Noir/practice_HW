@@ -7,10 +7,10 @@ using System.Data.SqlClient;
 
 namespace HW5.DAO.Implementation
 {
-    public class OrderDao : IOrderDao
+    public class OrderAdoDao : IOrderDao
     {
         private readonly string _connectionString;
-        public OrderDao(IConfiguration config)
+        public OrderAdoDao(IConfiguration config)
         {
             _connectionString = config.GetConnectionString("DefaultConnection");
             if (string.IsNullOrEmpty(_connectionString))
@@ -167,15 +167,19 @@ namespace HW5.DAO.Implementation
         }
 
 
-        public async Task<DtoResult<IEnumerable<OrderShortResponseDto>>> GetOrdersAsync(bool sqlDataReaderMode)
+        public async Task<DtoResult<IEnumerable<OrderShortResponseDto>>> GetOrdersAsync(Dictionary<string, string> parametrs)
         {
-            if (sqlDataReaderMode)
+            if (parametrs != null && parametrs.ContainsKey("sqlDataAccesser") && parametrs["sqlDataAccesser"].ToLower() == "reader")
             {
                 return await GetOrdersReaderModeAsync();
             }
-            else
+            else if(parametrs != null && parametrs.ContainsKey("sqlDataAccesser") && parametrs["sqlDataAccesser"].ToLower() == "adapter")
             {
                 return await GetOrdersAdapterModeAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Parametrs needs to have 'sqlDataAccesser' key with options 'reader' or 'adapter'");
             }
         }
 

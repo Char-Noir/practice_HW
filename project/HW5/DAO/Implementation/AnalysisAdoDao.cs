@@ -5,10 +5,10 @@ using System.Data.SqlClient;
 
 namespace HW5.DAO.Implementation
 {
-    public class AnalysisDao : IAnalysisDao
+    public class AnalysisAdoDao : IAnalysisDao
     {
         private readonly string _connectionString;
-        public AnalysisDao(IConfiguration config)
+        public AnalysisAdoDao(IConfiguration config)
         {
             _connectionString = config.GetConnectionString("DefaultConnection");
             if (string.IsNullOrEmpty(_connectionString))
