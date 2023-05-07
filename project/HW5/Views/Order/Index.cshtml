@@ -10,15 +10,26 @@
     <a asp-action="Create">Create New</a>
 </p>
 <ul class="nav nav-pills" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="first-tab" data-bs-toggle="tab" data-bs-target="#first" type="button" role="tab" aria-controls="first" aria-selected="true"> SqlCommand and SqlDataReader</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="second-tab" data-bs-toggle="tab" data-bs-target="#second" type="button" role="tab" aria-controls="second" aria-selected="false">SqlDataAdapter and DataSet</button>
-    </li>
+    @if (ViewBag.Methode == "EF")
+    {
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="ef-tab" data-bs-toggle="tab" data-bs-target="#ef" type="button" role="tab" aria-controls="ef" aria-selected="true"> Entity Framework</button>
+        </li>
+    }
+    @if (ViewBag.Methode == "ADO")
+    {
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="first-tab" data-bs-toggle="tab" data-bs-target="#first" type="button" role="tab" aria-controls="first" aria-selected="true"> SqlCommand and SqlDataReader</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="second-tab" data-bs-toggle="tab" data-bs-target="#second" type="button" role="tab" aria-controls="second" aria-selected="false">SqlDataAdapter and DataSet</button>
+        </li>
+    }
+   
 </ul>
 <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="first" role="tabpanel" aria-labelledby="first-tab">
+    
+    <div class="tab-pane fade show active" id="@(ViewBag.Methode == "EF" ? "ef":"first")" role="tabpanel" aria-labelledby="@(ViewBag.Methode == "EF" ? "ef-tab":"first-tab")">
         @if (Model.Item1.Any())
         {
             <table class="table">
@@ -73,6 +84,8 @@
         }
 
     </div>
+    @if (ViewBag.Methode == "ADO")
+    {
     <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="second-tab">
         @if (Model.Item2.Any())
         {
@@ -127,5 +140,6 @@
             <img src="img/empty_list.svg" alt="Empty"></img>
         }
     </div>
+    }
    
 </div>
