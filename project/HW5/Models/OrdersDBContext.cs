@@ -21,9 +21,7 @@ public partial class OrdersDBContext : DbContext
 
     public virtual DbSet<Order> Orders { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("name=ConnectionStrings:DefaultConnection");
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,7 +46,7 @@ public partial class OrdersDBContext : DbContext
 
             entity.HasOne(d => d.AnGroupNavigation).WithMany(p => p.Analyses)
                 .HasForeignKey(d => d.AnGroup)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.ClientNoAction)
                 .HasConstraintName("FK__Analysis__an_gro__412EB0B6");
         });
 
@@ -79,7 +77,7 @@ public partial class OrdersDBContext : DbContext
 
             entity.HasOne(d => d.OrdAnNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.OrdAn)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.ClientNoAction)
                 .HasConstraintName("FK__Orders__ord_an__440B1D61");
         });
 
