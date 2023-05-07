@@ -11,7 +11,7 @@ namespace HW5.DAO
 
         // Read
         Task<DtoResult<OrderFullResponseDto>> GetOrderAsync(int orderId);
-        Task<DtoResult<IEnumerable<OrderShortResponseDto>>> GetOrdersAsync(bool sqlDataReaderMode);
+        Task<DtoResult<IEnumerable<OrderShortResponseDto>>> GetOrdersAsync(Dictionary<string,string> parametrs);
 
         // Update
         Task<DtoResult<bool>> UpdateOrderAsync(int id, OrderRequestDto order);
