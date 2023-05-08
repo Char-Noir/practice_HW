@@ -1,0 +1,145 @@
+﻿@model (IEnumerable<HW5.DTO.Responses.OrderShortResponseDto>, IEnumerable<HW5.DTO.Responses.OrderShortResponseDto>)
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h1>Orders</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<ul class="nav nav-pills" id="myTab" role="tablist">
+    @if (ViewBag.Methode == "EF")
+    {
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="ef-tab" data-bs-toggle="tab" data-bs-target="#ef" type="button" role="tab" aria-controls="ef" aria-selected="true"> Entity Framework</button>
+        </li>
+    }
+    @if (ViewBag.Methode == "ADO")
+    {
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="first-tab" data-bs-toggle="tab" data-bs-target="#first" type="button" role="tab" aria-controls="first" aria-selected="true"> SqlCommand and SqlDataReader</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="second-tab" data-bs-toggle="tab" data-bs-target="#second" type="button" role="tab" aria-controls="second" aria-selected="false">SqlDataAdapter and DataSet</button>
+        </li>
+    }
+   
+</ul>
+<div class="tab-content" id="myTabContent">
+    
+    <div class="tab-pane fade show active" id="@(ViewBag.Methode == "EF" ? "ef":"first")" role="tabpanel" aria-labelledby="@(ViewBag.Methode == "EF" ? "ef-tab":"first-tab")">
+        @if (Model.Item1.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item1.FirstOrDefault().Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item1.FirstOrDefault().DateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item1.FirstOrDefault().AnalysisName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item1.FirstOrDefault().GroupName)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Item1)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AnalysisName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GroupName)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new {  id=item.Id  }) |
+                                @Html.ActionLink("Details", "Details", new {  id=item.Id  }) |
+                                @Html.ActionLink("Delete", "Delete", new {  id=item.Id  })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+        else
+        {
+           <span>No result was found!</span>
+           <img src="img/empty_list.svg" alt="Empty"></img>
+        }
+
+    </div>
+    @if (ViewBag.Methode == "ADO")
+    {
+    <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="second-tab">
+        @if (Model.Item2.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item2.FirstOrDefault().Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item2.FirstOrDefault().DateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item2.FirstOrDefault().AnalysisName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Item2.FirstOrDefault().GroupName)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Item2)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AnalysisName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GroupName)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new {  id=item.Id  }) |
+                                @Html.ActionLink("Details", "Details", new {  id=item.Id  }) |
+                                @Html.ActionLink("Delete", "Delete", new {  id=item.Id  })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+        else
+        {
+            <span>No result was found!</span>
+            <img src="img/empty_list.svg" alt="Empty"></img>
+        }
+    </div>
+    }
+   
+</div>
