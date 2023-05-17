@@ -1,0 +1,56 @@
+﻿@model IEnumerable<HW78.Dto.Response.ExpenseDtoResponse>
+@using HW78.Helper;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostExpense)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Commentary)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    <a asp-action="Details" asp-controller="Categories" asp-route-id="@item.CategoryId">@Html.DisplayFor(modelItem => item.CategoryName)</a>
+                    
+            </td>
+                <td>
+                    @item.DateTime.ToString("d")
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostExpense)
+            </td>
+            <td>
+                    @item.Commentary.TruncateAndAddEllipsis(18)
+            </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdExpense">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdExpense">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdExpense">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

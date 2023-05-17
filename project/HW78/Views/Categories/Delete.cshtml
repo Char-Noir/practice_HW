@@ -1,0 +1,60 @@
+﻿@model HW78.Dto.Response.CategoryDtoResponse
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+
+@if (Model.NumberOfExpenses > 0)
+{
+    <h1>Deactivate</h1>
+    <h3>Are you sure you want to deactivate this?</h3>
+}
+else
+{
+    <h1>Delete</h1>
+    <h3>Are you sure you want to delete this?</h3>
+}
+
+<div>
+    <h4>Category</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NameCategory)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NameCategory)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsVisible)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsVisible)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+    </dl>
+    
+    @if (Model.NumberOfExpenses > 0)
+    {
+        <form asp-action="Deactivate" asp-route-id="@Model.IdCategory">
+            <input type="hidden" asp-for="IdCategory" />
+            <input type="submit" value="Deactivate" class="btn btn-danger" />|
+            <a asp-action="Index">Back to List</a>
+        </form>
+    }
+    else
+    {
+        <form asp-action="Delete" asp-route-id="@Model.IdCategory">
+            <input type="hidden" asp-for="IdCategory" />
+            <input type="submit" value="Delete" class="btn btn-danger" />|
+            <a asp-action="Index">Back to List</a>
+        </form>
+    }
+    
+</div>

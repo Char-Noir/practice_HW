@@ -1,0 +1,86 @@
+﻿@using HW78.Dto.Response;
+@model HW78.Dto.Request.CategoryDtoRequest;
+
+@{
+    ViewData["Title"] = "Categories";
+    List<CategoryDtoResponse> categories = ViewBag.Categories ?? new List<CategoryDtoResponse>();
+}
+
+<h1>Categories</h1>
+
+
+
+<!-- Button trigger modal for create-->
+<button type="button" class="btn" data-toggle="modal" data-target="#createModal">
+    <img src="img/create.svg" alt="Create"/>
+</button>
+
+<!-- Modal for create -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Create">
+                
+               
+           
+            <div class="modal-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="NameCategory" class="control-label"></label>
+                    <input asp-for="NameCategory" maxlength="64" minlenght="4" class="form-control" />
+                    <span asp-validation-for="NameCategory" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               
+                    <input type="submit" value="Add category" class="btn btn-primary" />
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NameCategory)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in categories)
+        {
+        <tr>
+            <td>
+                    <a asp-action="Details" asp-route-id="@item.IdCategory">@Html.DisplayFor(modelItem => item.NameCategory)</a>
+            </td>
+            <td>
+                    @if (item.IsActive)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.IdCategory"> <img src="img/delete.svg" alt="Delete" /></a>      
+                    }
+
+                    else{
+                        <a asp-action="Delete" asp-route-id="@item.IdCategory"> <img width="30px" height="30px" src="img/activate.svg" alt="Activate" /></a>
+                    }
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
