@@ -1,0 +1,74 @@
+﻿@model HW78.Dto.Response.CategoryDtoResponse
+
+@{
+    ViewData["Title"] = Model.NameCategory;
+}
+
+<h1>Category</h1>
+
+<div>
+    <h4>@Model.NameCategory</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NameCategory)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NameCategory)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsVisible)
+            <span>
+                <br />
+                <small>
+                    <i>
+                        This value allows you to hide or show this category in reports.<br /> <span style="color:lightseagreen">Enabled</span> - displayed. <span style="color:lightseagreen">Disabled</span> - not displayed.
+                    </i>
+                </small>
+            </span>
+            
+        </dt>
+        <dd class = "col-sm-10">
+            @if (Model.IsVisible)
+            {
+                <span>Visible</span>
+            }
+            else
+            {
+                <span>Invisible</span>
+            }
+        </dd>
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsActive)
+            <span>
+                <br/>
+                <small>
+                    <i>
+                        This value allows you to remove the category from the available costs when creating, but leaves it in the history.<br /> <span style="color:lightseagreen">Enabled</span> - available. <span style="color:lightseagreen">Disabled</span> - unavailable.
+                    </i>
+                </small>
+            </span>
+        </dt>
+        <dd class = "col-sm-10">
+            @if (Model.IsActive)
+            {
+                <span>Active</span>
+            }
+            else
+            {
+                <span>Unactive</span>
+            }
+        </dd>
+
+
+
+        
+
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.IdCategory">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,69 @@
+﻿@model HW78.Dto.Request.CategoryDtoExpandedRequest
+
+@{
+    ViewData["Title"] = "Edit";
+    var id = Context.Request.Query["id"];
+}
+
+<h1>Edit</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden"  />
+            <div class="form-group">
+                <label asp-for="NameCategory" class="control-label"></label>
+                <input asp-for="NameCategory" class="form-control" />
+                <span asp-validation-for="NameCategory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsVisible" class="control-label"></label>
+                
+                @Html.CheckBoxFor(m => m.IsVisible)
+                <span asp-validation-for="IsVisible" class="text-danger"></span>
+
+                <span>
+                    <br />
+                    <small>
+                        <i>
+                            This value allows you to hide or show this category in reports.<br /> <span style="color:lightseagreen">Enabled</span> - displayed. <span style="color:lightseagreen">Disabled</span> - not displayed.
+                        </i>
+                    </small>
+                </span>
+
+
+
+            </div>
+            <div class="form-group">
+                <label asp-for="IsActive" class="control-label"></label>
+                @Html.CheckBoxFor(m => m.IsActive)
+                <span asp-validation-for="IsActive" class="text-danger"></span>
+                <span>
+                    <br />
+                    <small>
+                        <i>
+                            This value allows you to remove the category from the available costs when creating, but leaves it in the history.<br /> <span style="color:lightseagreen">Enabled</span> - available. <span style="color:lightseagreen">Disabled</span> - unavailable.
+                        </i>
+                    </small>
+                </span>
+
+
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
